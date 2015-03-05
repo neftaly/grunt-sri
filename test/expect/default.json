@@ -1,29 +1,28 @@
-"payload": {
-    "@test/fixtures/example.txt": {
-        "path": "./test/fixtures/example.txt",
-        "type": null,
-        "integrity": "sha256-GJShnIW6FTrL90OsTkP8AEyJFgSyb4xp4eg+oq/HxI8= sha512-gTgfHazUgkpsUD/QcFd2MJnBK4MJ0KvOxAAMkGDLv6Z5iLKtpmmrSDf809TqbiuNsrnakZfVES+zaf0AbaVF3g==",
-        "hashes": {
-            "sha256": "GJShnIW6FTrL90OsTkP8AEyJFgSyb4xp4eg+oq/HxI8=",
-            "sha512": "gTgfHazUgkpsUD/QcFd2MJnBK4MJ0KvOxAAMkGDLv6Z5iLKtpmmrSDf809TqbiuNsrnakZfVES+zaf0AbaVF3g==",
-        }
-    },
-    "@test/fixtures/example/example.css": {
-        "path": "./test/fixtures/example/example.css",
-        "type": null,
-        "integrity": "sha256-TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc= sha512-ZCiga9nZsHi+0msQIk+bhMG2X4q1HrQDMf+0bRyt6J+CZlotdb5owoMqGmxd+L+qMDYdqjWjReSZ6519/dc/UQ==",
-        "hashes": {
-            "sha256": "TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc=",
-            "sha512": "ZCiga9nZsHi+0msQIk+bhMG2X4q1HrQDMf+0bRyt6J+CZlotdb5owoMqGmxd+L+qMDYdqjWjReSZ6519/dc/UQ==",
-        }
-    },
-    "@test/fixtures/example/example.js": {
-        "path": "./test/fixtures/example/example.js",
-        "type": null,
-        "integrity": "sha256-/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18= sha512-44VwQcX4j8fYzG6PfGXah10MXtLThaZDpjLO2/KPnmRtMf8tTgF2/y+F7Kx0CjoTbAzf3zJTpcwEwCQNrZjqyw==",
-        "hashes": {
-            "sha256": "/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18=",
-            "sha512": "44VwQcX4j8fYzG6PfGXah10MXtLThaZDpjLO2/KPnmRtMf8tTgF2/y+F7Kx0CjoTbAzf3zJTpcwEwCQNrZjqyw==",
+{
+    "payload": {
+        "@test/fixtures/example.txt": {
+            "path": "test/fixtures/example.txt",
+            "type": null,
+            "integrity": "sha256-GJShnIW6FTrL90OsTkP8AEyJFgSyb4xp4eg+oq/HxI8=",
+            "hashes": {
+                "sha256": "GJShnIW6FTrL90OsTkP8AEyJFgSyb4xp4eg+oq/HxI8="
+            }
+        },
+        "@test/fixtures/example/example.css": {
+            "path": "test/fixtures/example/example.css",
+            "type": null,
+            "integrity": "sha256-TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc=",
+            "hashes": {
+                "sha256": "TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc="
+            }
+        },
+        "@test/fixtures/example/example.js": {
+            "path": "test/fixtures/example/example.js",
+            "type": null,
+            "integrity": "sha256-/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18=",
+            "hashes": {
+                "sha256": "/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18="
+            }
         }
     }
 }

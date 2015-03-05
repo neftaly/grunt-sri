@@ -5,53 +5,84 @@
 "use strict";
 
 module.exports = function (grunt) {
-    var tempFolder = "./tmp"; // Temporary folder for tests
+    /*
+        General tasks
+    */
 
-    grunt.initConfig({
-        "jslint": {
-            all: {
-                src: [
-                    "Gruntfile.js",
-                    "tasks/*.js",
-                    "<%= mochaTest.tests %>"
-                ],
-                directives: {
-                    node: true,
-                    todo: true,
-                    predef: [
-                        "describe",
-                        "it"
-                    ]
-                }
-            }
-        },
-
-        "mochaTest": {
-            "tests": ["test/*_test.js"]
-        },
-
-        // Test task
-        "sri": {
-            "single": ["test/fixtures/example.txt"],
-            "multi": {
-                "src": ["test/fixtures/example/*"]
+    // Linting
+    grunt.config("jslint", {
+        all: {
+            src: [
+                "Gruntfile.js",
+                "tasks/*.js",
+                "<%= mochaTest.tests %>"
+            ],
+            directives: {
+                node: true,
+                todo: true,
+                predef: [
+                    "describe",
+                    "it"
+                ]
             }
         }
     });
 
-    grunt.loadNpmTasks("grunt-jslint");
-    grunt.loadNpmTasks("grunt-mocha-test");
+    // Test harness
+    grunt.config("mochaTest", {
+        "tests": ["test/*_test.js"]
+    });
 
     grunt.loadTasks("tasks"); // Load this project
+    grunt.loadNpmTasks("grunt-jslint");
+    grunt.loadNpmTasks("grunt-mocha-test");
+    grunt.registerTask("default", ["jslint", "test"]);
 
-    grunt.registerTask("prep", "Create temp folder", function () {
-        if (grunt.file.exists(tempFolder)) {
-            grunt.file.delete(tempFolder);
+
+    /*
+        Module-test-specific tasks
+    */
+
+    grunt.config("sri", {
+        // Use the default settings for *everything* in ./public/css
+        // default algorithms: ["sha256"]
+        // default dest: "./payload.json"
+        "default": {
+            "src": [
+                "test/fixtures/example/*",
+                "test/fixtures/example.txt"
+            ]
+        },
+
+        // Create a second manifest with custom settings
+        "custom": {
+            "options": {
+                "algorithms": [
+                    "sha256",
+                    "sha512"
+                ],
+                "dest": "./tmp/sri-directives.json"
+            },
+            "src": [
+                "test/fixtures/example/*",
+                "test/fixtures/example.txt"
+            ]
         }
-        grunt.file.mkdir(tempFolder);
     });
-    grunt.registerTask("clean", "Remove temp folder", function () {
-        grunt.file.delete(tempFolder);
+
+    grunt.registerTask("prep", "Prepare for tests", function () {
+        if (grunt.file.exists("./payload.json")) {
+            grunt.file.delete("./payload.json");
+        }
+        if (grunt.file.exists("./tmp")) {
+            grunt.file.delete("./tmp");
+        }
+        grunt.file.mkdir("./tmp");
+    });
+
+    grunt.registerTask("clean", "Cleanup after tests", function () {
+        grunt.file.delete("./payload.json");
+        grunt.file.delete("./tmp");
     });
 
     grunt.registerTask("test", [
@@ -61,5 +92,4 @@ module.exports = function (grunt) {
         "clean"
     ]);
 
-    grunt.registerTask("default", ["jslint", "test"]);
 };

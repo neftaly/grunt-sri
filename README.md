@@ -24,20 +24,39 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-sri");
 
     grunt.initConfig({
-        sri: {
-            app: {
-                options: {
-                    algorithms: [
-                        "sha256", // Default
-                        "sha512"
-                    ]
-                },
-                src: [
+        "sri": {
+
+            // Use the default settings for *everything* in ./public/css
+            //     Default algorithms: ["sha256"]
+            //     Default dest: "./payload.json"
+            "bobsDefaultTask": {
+                "src": [
                     "public/**/*.css"
-                ],
-                dest: "./payload.json" // Default
-            },
+                ]
+            }
+
+            /*
+            ,
+
+            // Create a second manifest with custom settings
+            "janesCustomTask": {
+                "options": {
+                    "algorithms": [
+                        "sha256",
+                        "sha512"
+                    ],
+                    "dest": "./public/sri-directives.json"
+                },
+                "src": [
+                    "public/css/file1.css",
+                    "public/js/file2.js"
+                ]
+            }
+
+            */
+
         }
+
     });
 
     grunt.registerTask("default", ["sri"]);
@@ -64,7 +83,7 @@ Example:
 {
     "payload": {
         "@public/style.css": {
-            "path": "./public/style.css",
+            "path": "public/style.css",
             "type": null,
             "integrity": "sha256-XXXX sha512-XXXXXXXX",
             "hashes": {
@@ -91,7 +110,7 @@ $sri = function (id) {
 
 $element = "<link
     href='/style.css?cache={ sri("@public/style.css")["hashes"]["sha256"] }'
-    integrity='{ sri("@public/style.css")["integrity"] }'
+    integrity='{ $sri("@public/style.css")["integrity"] }'
     rel='stylesheet'>";
 ```
 

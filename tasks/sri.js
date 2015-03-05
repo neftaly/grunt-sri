@@ -4,32 +4,69 @@
 
 "use strict";
 
+var fs = require("fs"),
+    sriToolbox = require("sri-toolbox");
+
 module.exports = function (grunt) {
 
-    function sri(filepath, options) {
-        /* // error
+    function generate(filePath, options) {
+        var data,
+            output;
+
+        /*
         //grunt.verbose.error();
         grunt.log.error();
         grunt.fail.warn("Option not allowed.");
         return false;
         */
-        return filepath + " " + options;
+
+        /*jslint stupid:true */
+        // TODO: async
+        data = fs.readFileSync(filePath);
+        /*jslint stupid:false */
+
+        output = sriToolbox.generate({
+            full: true,
+            algorithms: options.algorithms
+        }, data);
+
+        // TODO: have sriToolbox generate "null" for undefined types
+        output.type = output.type || null;
+
+        return output;
     }
 
     grunt.registerMultiTask("sri", "Generate SRI file hashes.", function () {
-        // Merge task-specific and/or target-specific options with these defaults.
-        var options = this.options({
-            "force": grunt.option("force") === true
+        var options,
+            manifest;
+
+        options = this.options({
+            "algorithms": grunt.option("algorithms") || ["sha256"],
+            "dest": grunt.option("dest") || "./payload.json"
         });
 
-        // hash specified file
-        this.filesSrc.forEach(function (filepath) {
-            sri(filepath, options);
+        manifest = {};
+        this.filesSrc.forEach(function (filePath) {
+            var id = "@" + filePath;
+            manifest[id] = generate(filePath, options);
+            manifest[id].path = filePath;
         });
-        grunt.log.ok(
-            this.filesSrc.length + " " +
-                grunt.util.pluralize(this.filesSrc.length, "path/paths") +
-                " hashed."
+
+        fs.writeFile(
+            options.dest,
+            JSON.stringify({ payload: manifest }),
+            function (err) {
+                if (err) {
+                    grunt.log.error("sri: " + err);
+                    grunt.log.writeln();
+                    return false;
+                }
+                return grunt.log.ok(
+                    this.filesSrc.length + " " +
+                        grunt.util.pluralize(this.filesSrc.length, "path/paths") +
+                        " hashed."
+                );
+            }
         );
     });
 
