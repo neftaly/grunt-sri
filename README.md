@@ -1,58 +1,41 @@
-# grunt-sri [![Build Status](https://travis-ci.org/neftaly/grunt-sri.svg?branch=master)](https://travis-ci.org/neftaly/grunt-sri)
-This tool generates a JSON manifest of [SRI](https://srihash.org/) data, to be served in HTML elements.
+# grunt-sri
 
-Once the DB has been generated, only the `_sri` property will be over-written. You can safely rename the identifier, set a custom `content-type`, or add custom properties.
+[![Build Status](https://travis-ci.org/neftaly/grunt-sri.svg?branch=master)](https://travis-ci.org/neftaly/grunt-sri)
+[![Dependencies Status](https://david-dm.org/neftaly/npm-subresource.svg)](https://david-dm.org/mozilla/srihash.org)
+[![Dev Dependencies Status](https://david-dm.org/neftaly/npm-subresource/dev-status.svg)](https://david-dm.org/mozilla/srihash.org#info=devDependencies)
 
-The default DB path is `./sri-directives.json`. Pre-1.0.0, storing the manifest in `package.json` is not recommended.
+This tool generates a JSON manifest of file hashes & [sub-resource integrity](https://srihash.org/) data.
 
-```javascript
-{
-    "manifest": {
 
-        ...
 
-        "short_file_identifier": { // Defaults to the file path
-            "content-type": "application/javascript",
-            "path": "./relative/file/path",
-            "_sri": { // Underscore denotes a computed property
-                "sha256": "hash",
-                "sha512": "hash",
-                "integrity": "SRI hash"
-            }
-        }
-
-        ...
-
-    }
-}
+## Install
+```shell
+npm install --save-dev grunt-sri
 ```
 
-## SemVer
-Minor releases < 1.0.0 will contain breaking changes.
 
-A major release will be made after the W3C spec is finalized.
 
 ## Usage
 Add the following to your `Gruntfile.js`:
-```javascript
+```js
 module.exports = function (grunt) {
     "use strict";
 
     grunt.loadNpmTasks("grunt-sri");
-    
+
     grunt.initConfig({
         sri: {
             app: {
                 options: {
                     algorithms: [
-                        "sha256",
+                        "sha256", // Default
                         "sha512"
                     ]
                 },
                 src: [
                     "public/**/*.css"
                 ],
-                dest: "./sri-directives.json"
+                dest: "./payload.json" // Default
             },
         }
     });
@@ -61,63 +44,74 @@ module.exports = function (grunt) {
 };
 ```
 
-Run the command `grunt`.
+Run the command `grunt`. The manifest file will be created.
 
-The file `sri-directives.json` will be produced:
-```javascript
+
+
+## Manifest
+Metadata is stored in JSON format.
+
+* The default manifest dest is `./payload.json`.
+* File paths are relative to the CWD of Grunt.  
+  This should be the project root.
+* File identifiers are prefixed with the "@" symbol.  
+  Custom identifiers & groups are planned for future release.
+
+ID prefixes and the `payload` property are used for forward-compatibility.
+
+Example:
+```json
 {
-    "manifest": {
-        "public/style.css": {
-            "content-type": "text/css",
-            "path": "public/style.css",
-            "_sri": {
+    "payload": {
+        "@public/style.css": {
+            "path": "./public/style.css",
+            "type": null,
+            "integrity": "sha256-XXXX sha512-XXXXXXXX",
+            "hashes": {
                 "sha256": "XXXX",
                 "sha512": "XXXXXXXX",
-                "integrity": "type:text/css sha256-XXXX sha512-XXXXXXXX"
             }
         }
     }
 }
 ```
 
-## Using `sri-directives.json`
-Data from the JSON file can be loaded directly into your markup.
 
-##### Template Strings
-```javascript
-require ("better-require");
-var manifest = require("./sri-directives.json").manifest;
+### Implementation
+Data from the manifest can be loaded into markup.
+Use the `integrity` property for SRI integrity attributes, a hash from `hashes` as a URL parameter for client-side caching, etc.
 
-var sri = function (identifier) {
-    return manifest[identifier]._sri.integrity,
+#### PHP
+```php
+// In production, consider compiling JSON to PHP assoc arrays
+$payload = json_decode(file_get_contents("./payload.json"), true);
+$sri = function (id) {
+    return $payload["payload"][id];
 }
 
-var html = `<link integrity="${ sri("public/style.css") }" href="/style.css" rel="stylesheet">`;
+$element = "<link
+    href='/style.css?cache={ sri("@public/style.css")["hashes"]["sha256"] }'
+    integrity='{ sri("@public/style.css")["integrity"] }'
+    rel='stylesheet'>";
 ```
 
-##### React
-```javascript
-require ("better-require");
-var manifest = require("./sri-directives.json").manifest;
+#### Javascript
+**Note:** Node apps should use [subresource](https://github.com/neftaly/npm-subresource) or [handlebars-helper-sri](https://github.com/neftaly/handlebars-helper-sri), which don't require a build step.
 
-var sriLink = React.createClass({
-    render: function () {
-        var integrity = manifest[this.props.sri]._sri.integrity,
-            href = this.props.href,
-            rel = this.props.rel;
-        return <link integrity={integrity} href={href} rel={rel}>;
-    }
-});
+```js
+// ES6
+var payload = require("./payload.json");
+var sri = (id) => payload.payload[id];
 
-React.render(
-    <sriLink sri="public/style.css" href="/style.css" rel="stylesheet" />,
-    document.head // hopefully you're doing this server-side
-);
+var element = `<link
+    href='/style.css?cache=${ sri("@public/style.css").hashes.sha256 }'
+    integrity='${ sri("@public/style.css").integrity }'
+    rel='stylesheet'>`;
 ```
 
-##### Handlebars
-The tool [handlebars-helper-sri](https://github.com/neftaly/handlebars-helper-sri) has been provided for use with Handlebars.
 
-```html
-<link integrity="{{sri "public/style.css"}}" href="/style.css" rel="stylesheet">
-```
+
+## SemVer
+This tool follows SemVer from v0.1.0, however it is important to note that the [SRI](http://www.w3.org/TR/SRI) spec is still in draft.
+
+Changes to the V1 SRI spec will be tracked with minor releases.
