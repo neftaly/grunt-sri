@@ -1,6 +1,6 @@
 {
     "payload": {
-        "@test/fixtures/example.txt": {
+        "@txt1": {
             "path": "test/fixtures/example.txt",
             "type": null,
             "integrity": "sha256-GJShnIW6FTrL90OsTkP8AEyJFgSyb4xp4eg+oq/HxI8=",
@@ -8,7 +8,7 @@
                 "sha256": "GJShnIW6FTrL90OsTkP8AEyJFgSyb4xp4eg+oq/HxI8="
             }
         },
-        "@test/fixtures/example/example.css": {
+        "@css1": {
             "path": "test/fixtures/example/example.css",
             "type": null,
             "integrity": "sha256-TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc=",
@@ -16,7 +16,7 @@
                 "sha256": "TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc="
             }
         },
-        "@test/fixtures/example/example.js": {
+        "@js1": {
             "path": "test/fixtures/example/example.js",
             "type": null,
             "integrity": "sha256-/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18=",
