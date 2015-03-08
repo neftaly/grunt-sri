@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/neftaly/grunt-sri.svg?branch=master)](https://travis-ci.org/neftaly/grunt-sri)
 [![Dependencies Status](https://david-dm.org/neftaly/npm-subresource.svg)](https://david-dm.org/mozilla/srihash.org)
 [![Dev Dependencies Status](https://david-dm.org/neftaly/npm-subresource/dev-status.svg)](https://david-dm.org/mozilla/srihash.org#info=devDependencies)
+[![Peer Dependencies Status](https://david-dm.org/neftaly/npm-subresource/peer-status.svg)](https://david-dm.org/mozilla/srihash.org#info=peerDependencies)
 
 This tool generates a JSON manifest of file hashes & [sub-resource integrity](https://srihash.org/) data.
 

@@ -1,6 +1,6 @@
 {
   "name": "grunt-sri",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Client-side caching & SRI generation for Grunt",
   "author": {
     "name": "Neftaly Hernandez",
@@ -31,6 +31,7 @@
     "test": "grunt test"
   },
   "dependencies": {
+    "async": "^0.9.0",
     "sri-toolbox": "^0.1.3"
   },
   "devDependencies": {

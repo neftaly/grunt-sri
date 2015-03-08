@@ -5,69 +5,80 @@
 "use strict";
 
 var fs = require("fs"),
+    async = require("async"),
     sriToolbox = require("sri-toolbox");
 
 module.exports = function (grunt) {
+    var generate,
+        writeJson;
 
-    function generate(filePath, options) {
-        var data,
-            output;
 
-        /*
-        //grunt.verbose.error();
-        grunt.log.error();
-        grunt.fail.warn("Option not allowed.");
-        return false;
-        */
-
-        /*jslint stupid:true */
-        // TODO: async
-        data = fs.readFileSync(filePath);
-        /*jslint stupid:false */
-
-        output = sriToolbox.generate({
+    generate = function (filePath, options, sriDataCallback) {
+        options = {
             full: true,
             algorithms: options.algorithms
-        }, data);
+        };
 
-        // TODO: have sriToolbox generate "null" for undefined types
-        output.type = output.type || null;
+        fs.readFile(filePath, function (err, data) {
+            var output = sriToolbox.generate(options, data);
+            output.type = output.type || null;
+            output.path = filePath;
+            sriDataCallback(err, output);
+        });
+    };
 
-        return output;
-    }
+
+    writeJson = function (filePath, object, callback) {
+        fs.writeFile(
+            filePath,
+            JSON.stringify(object),
+            callback
+        );
+    };
+
 
     grunt.registerMultiTask("sri", "Generate SRI file hashes.", function () {
-        var options,
-            manifest;
+        var that = this,
+            done = this.async(),
+            options;
 
         options = this.options({
             "algorithms": grunt.option("algorithms") || ["sha256"],
             "dest": grunt.option("dest") || "./payload.json"
         });
 
-        manifest = {};
-        this.filesSrc.forEach(function (filePath) {
-            var id = "@" + filePath;
-            manifest[id] = generate(filePath, options);
-            manifest[id].path = filePath;
-        });
 
-        fs.writeFile(
-            options.dest,
-            JSON.stringify({ payload: manifest }),
-            function (err) {
+        async.reduce(this.filesSrc, {},
+            function (manifest, filePath, callback) {
+                generate(filePath, options, function (err, sriData) {
+                    manifest["@" + filePath] = sriData;
+                    callback(err, manifest);
+                });
+            },
+            function (err, manifest) {
                 if (err) {
-                    grunt.log.error("sri: " + err);
-                    grunt.log.writeln();
-                    return false;
+                    // Error generating SRI hashes
+                    grunt.log.error("sri-gen: " + err);
+                    return done(false);
                 }
-                return grunt.log.ok(
-                    this.filesSrc.length + " " +
-                        grunt.util.pluralize(this.filesSrc.length, "path/paths") +
-                        " hashed."
-                );
-            }
-        );
+                writeJson(options.dest, { payload: manifest }, function (err) {
+                    if (err) {
+                        // Error writing JSON file
+                        grunt.log.error("sri: " + err);
+                        return done(false);
+                    }
+                    // Success
+                    grunt.log.ok(
+                        "Hashes generated for " + that.filesSrc.length + " " +
+                            grunt.util.pluralize(
+                                that.filesSrc.length,
+                                "file/files"
+                            )
+                    );
+                    return done();
+                });
+            });
+
     });
 
 };
