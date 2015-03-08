@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/neftaly/grunt-sri.svg?branch=master)](https://travis-ci.org/neftaly/grunt-sri)
 [![Dependencies Status](https://david-dm.org/neftaly/npm-subresource.svg)](https://david-dm.org/mozilla/srihash.org)
 [![Dev Dependencies Status](https://david-dm.org/neftaly/npm-subresource/dev-status.svg)](https://david-dm.org/mozilla/srihash.org#info=devDependencies)
-[![Peer Dependencies Status](https://david-dm.org/neftaly/npm-subresource/peer-status.svg)](https://david-dm.org/mozilla/srihash.org#info=peerDependencies)
 
 This tool generates a JSON manifest of file hashes & [sub-resource integrity](https://srihash.org/) data.
 
@@ -28,8 +27,6 @@ module.exports = function (grunt) {
         "sri": {
 
             // Use the default settings for *everything* in ./public/css
-            //     Default algorithms: ["sha256"]
-            //     Default dest: "./payload.json"
             "bobsDefaultTask": {
                 "src": [
                     "public/**/*.css"
@@ -42,11 +39,9 @@ module.exports = function (grunt) {
             // Create a second manifest with custom settings
             "janesCustomTask": {
                 "options": {
-                    "algorithms": [
-                        "sha256",
-                        "sha512"
-                    ],
-                    "dest": "./public/sri-directives.json"
+                    "algorithms": ["sha256"],
+                    "dest": "./public/sri-directives.json",
+                    "targetProp": "payload"
                 },
                 "src": [
                     "public/css/file1.css",
@@ -65,6 +60,16 @@ module.exports = function (grunt) {
 ```
 
 Run the command `grunt`. The manifest file will be created.
+
+
+
+## Options
+* String **dest**: Target JSON file.
+  Default `"./payload.json"`
+* Array **algorithms**: List of desired hash algorithms.  
+  Default `["sha256", "sha512"]`
+* String **targetProp**: Target JS object property name.
+  Default `null`
 
 
 
@@ -132,6 +137,6 @@ var element = `<link
 
 
 ## SemVer
-This tool follows SemVer from v0.1.0, however it is important to note that the [SRI](http://www.w3.org/TR/SRI) spec is still in draft.
+This tool follows SemVer from v0.1.0, however it is important to note that the [SRI](https://w3c.github.io/webappsec/specs/subresourceintegrity/) spec is still in draft.
 
 Changes to the V1 SRI spec will be tracked with minor releases.

@@ -44,9 +44,7 @@ module.exports = function (grunt) {
     */
 
     grunt.config("sri", {
-        // Use the default settings for *everything* in ./public/css
-        // default algorithms: ["sha256"]
-        // default dest: "./payload.json"
+        // Create a manifest with the default settings
         "default": {
             "src": [
                 "test/fixtures/example/*",
@@ -57,11 +55,9 @@ module.exports = function (grunt) {
         // Create a second manifest with custom settings
         "custom": {
             "options": {
-                "algorithms": [
-                    "sha256",
-                    "sha512"
-                ],
-                "dest": "./tmp/sri-directives.json"
+                "algorithms": ["sha256"],
+                "dest": "./tmp/sri-directives.json",
+                "targetProp": "payload"
             },
             "src": [
                 "test/fixtures/example/*",
