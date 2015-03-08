@@ -50,7 +50,7 @@ module.exports = function (grunt) {
      *     * filesSrc & done should be pre-defined.
      *     * err should be supplied by writeJson.
      */
-    writeLog = curry(function (filesSrc, done, err) {
+    writeLog = curry(function (fileCount, done, err) {
         if (err) {
             // Error writing JSON file
             grunt.log.error("sri: " + err);
@@ -58,8 +58,8 @@ module.exports = function (grunt) {
         }
         // Success
         grunt.log.ok(
-            "Hashes generated for " + filesSrc.length + " " +
-                grunt.util.pluralize(filesSrc.length, "file/files")
+            "Hashes generated for " + fileCount + " " +
+                grunt.util.pluralize(fileCount, "file/files")
         );
         return done();
     });
@@ -69,9 +69,9 @@ module.exports = function (grunt) {
      * Main Grunt task
      */
     task = function () {
-        var filesSrc = this.filesSrc,
-            done = this.async(),
-            options;
+        var done = this.async(),
+            options,
+            files;
 
         options = this.options({
             "algorithms": grunt.option("algorithms") || ["sha256", "sha512"],
@@ -79,16 +79,26 @@ module.exports = function (grunt) {
             "targetProp": grunt.option("targetProp") || null
         });
 
+        // Build a file list.
+        // Required as Grunt is designed for many-to-one mapping,
+        // whereas we only ever want one-to-one mapping.
+        files = this.filesSrc.map(function (src) {
+            return {
+                src: src,
+                id: "@" + src
+            };
+        });
+
         // Iterate through the file list
         async.reduce(
-            filesSrc,
+            files,
             {},
 
             // Build manifest using the "reduce to object" pattern
-            function (manifest, filePath, callback) {
-                generate(filePath, options, function (err, sriData) {
+            function (manifest, file, callback) {
+                generate(file.src, options, function (err, sriData) {
                     // Attach a property to the WIP manifest object
-                    manifest["@" + filePath] = sriData;
+                    manifest[file.id] = sriData;
                     callback(err, manifest);
                 });
             },
@@ -113,7 +123,7 @@ module.exports = function (grunt) {
                 writeJson(
                     options.dest,
                     targetObj,
-                    writeLog(filesSrc, done)
+                    writeLog(files.length, done)
                 );
             }
 

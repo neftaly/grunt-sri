@@ -59,9 +59,19 @@ module.exports = function (grunt) {
                 "dest": "./tmp/sri-directives.json",
                 "targetProp": "payload"
             },
-            "src": [
-                "test/fixtures/example/*",
-                "test/fixtures/example.txt"
+            "files": [
+                {
+                    src: "test/fixtures/example/example.js",
+                    id: "js1"
+                },
+                {
+                    src: "test/fixtures/example/example.css",
+                    id: "css1"
+                },
+                {
+                    src: "test/fixtures/example.txt",
+                    id: "txt1"
+                }
             ]
         }
     });
