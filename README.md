@@ -1,8 +1,8 @@
 # grunt-sri
 
 [![Build Status](https://travis-ci.org/neftaly/grunt-sri.svg?branch=master)](https://travis-ci.org/neftaly/grunt-sri)
-[![Dependencies Status](https://david-dm.org/neftaly/npm-subresource.svg)](https://david-dm.org/mozilla/srihash.org)
-[![Dev Dependencies Status](https://david-dm.org/neftaly/npm-subresource/dev-status.svg)](https://david-dm.org/mozilla/srihash.org#info=devDependencies)
+[![Dependencies Status](https://david-dm.org/neftaly/grunt-sri.svg)](https://david-dm.org/neftaly/grunt-sri)
+[![Dev Dependencies Status](https://david-dm.org/neftaly/grunt-sri/dev-status.svg)](https://david-dm.org/neftaly/grunt-sri#info=devDependencies)
 
 This tool generates a JSON manifest of file hashes & [sub-resource integrity](https://srihash.org/) data.
 
@@ -43,9 +43,15 @@ module.exports = function (grunt) {
                     "dest": "./public/sri-directives.json",
                     "targetProp": "payload"
                 },
-                "src": [
-                    "public/css/file1.css",
-                    "public/js/file2.js"
+                "files": [
+                    {
+                        src: "public/css/example.css",
+                        type: "text/css",
+                        id: "cssfile1"
+                    },
+                    {
+                        src: "public/css/other.css"
+                    }
                 ]
             }
 

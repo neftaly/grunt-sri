@@ -8,18 +8,18 @@
                 "sha256": "GJShnIW6FTrL90OsTkP8AEyJFgSyb4xp4eg+oq/HxI8="
             }
         },
-        "@css1": {
+        "@test/fixtures/example/example.css": {
             "path": "test/fixtures/example/example.css",
-            "type": null,
-            "integrity": "sha256-TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc=",
+            "type": "text/css",
+            "integrity": "type:text/css sha256-TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc=",
             "hashes": {
                 "sha256": "TvytUxqe8I4dCBigca7hiQLZXJjnPgh9OoA+HpLtMyc="
             }
         },
         "@js1": {
             "path": "test/fixtures/example/example.js",
-            "type": null,
-            "integrity": "sha256-/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18=",
+            "type": "application/javascript",
+            "integrity": "type:application/javascript sha256-/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18=",
             "hashes": {
                 "sha256": "/E8eDQ0vsAXyOoJuN/jAS8jC3oznIVor8Eg3rx0nE18="
             }

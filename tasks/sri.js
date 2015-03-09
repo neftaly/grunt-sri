@@ -22,24 +22,32 @@ var fs = require("fs"),
  *    whereas we only ever want one-to-one mapping.
  */
 fileList = function (filesArray, filesObj) {
-    // Create an index of file paths referenced against IDs.
-    // This way we won't be doing an O(n^2) search for every element!
-    var fileIds = Object.keys(filesObj).reduce(function (list, key) {
-        var file = filesObj[key];
-        if (file.id && file.src.length === 1) {
-            if (list[file.src]) {
-                throw new Error("Duplicate file path: " + file.src + ".");
+    // Deal with "Files Array Format" Gruntfile
+    var fileProps = Object.keys(filesObj).reduce(function (list, key) {
+        var file = filesObj[key],
+            src;
+        if (file.src.length === 1) {
+            src = file.src[0];
+            if (list[src]) {
+                throw new Error("Duplicate resource: " + src + ".");
             }
-            list[file.src] = file.id;
+            list[src] = {
+                "id": "@" + (file.id || src),
+                "src": src,
+                "type": file.type
+            };
         }
         return list;
     }, {});
 
-    // Build the actual file list
+    // Deal with "Compact Format" Gruntfile
     return filesArray.map(function (src) {
+        if (fileProps[src]) {
+            return fileProps[src];
+        }
         return {
-            src: src,
-            id: "@" + (fileIds[src] || src)
+            "src": src,
+            "id": "@" + src
         };
     });
 };
@@ -51,12 +59,14 @@ fileList = function (filesArray, filesObj) {
 generate = function (filePath, options, sriDataCallback) {
     options = {
         full: true,
+        type: options.type,
         algorithms: options.algorithms
     };
-
     fs.readFile(filePath, function (err, data) {
         var output = sriToolbox.generate(options, data);
-        output.type = output.type || null;
+        if (!output.type) {
+            output.type = null;
+        }
         output.path = filePath;
         sriDataCallback(err, output);
     });
@@ -89,8 +99,7 @@ writeLog = curry(function (grunt, fileCount, done, err) {
     // Success
     grunt.log.ok(
         "Hashes generated for " + fileCount + " " +
-            (fileCount === 1) ? "file" : "files"
-            //grunt.util.pluralize(fileCount, "file/files")
+            grunt.util.pluralize(fileCount, "file/files")
     );
     return done();
 });
@@ -117,6 +126,7 @@ task = function (grunt) {
 
         // Build manifest using the "reduce to object" pattern
         function (manifest, file, callback) {
+            options.type = file.type;
             generate(file.src, options, function (err, sriData) {
                 // Attach a property to the WIP manifest object
                 manifest[file.id] = sriData;
@@ -130,7 +140,7 @@ task = function (grunt) {
 
             if (err) {
                 // Error generating SRI hashes
-                grunt.log.error("Error loading file: " + err);
+                grunt.log.error("Error loading resource: " + err);
                 return done(false);
             }
 

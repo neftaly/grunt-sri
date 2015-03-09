@@ -62,11 +62,12 @@ module.exports = function (grunt) {
             "files": [
                 {
                     src: "test/fixtures/example/example.js",
-                    id: "js1"
+                    id: "js1",
+                    type: "application/javascript"
                 },
                 {
                     src: "test/fixtures/example/example.css",
-                    id: "css1"
+                    type: "text/css"
                 },
                 {
                     src: "test/fixtures/example.txt",
