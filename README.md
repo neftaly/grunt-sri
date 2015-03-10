@@ -70,7 +70,7 @@ Run the command `grunt`. The manifest file will be created.
 
 
 ## Options
-* String **dest**: Target JSON file.
+* String **dest**: Target JSON file.  
   Default `"./payload.json"`
 * Array **algorithms**: List of desired hash algorithms.  
   Default `["sha256", "sha512"]`
@@ -86,22 +86,18 @@ Metadata is stored in JSON format.
 * File paths are relative to the CWD of Grunt.  
   This should be the project root.
 * File identifiers are prefixed with the "@" symbol.  
-  Custom identifiers & groups are planned for future release.
-
-ID prefixes and the `payload` property are used for forward-compatibility.
+  If no ID is specified, the path will be used.
 
 Example:
 ```json
 {
-    "payload": {
-        "@public/style.css": {
-            "path": "public/style.css",
-            "type": null,
-            "integrity": "sha256-XXXX sha512-XXXXXXXX",
-            "hashes": {
-                "sha256": "XXXX",
-                "sha512": "XXXXXXXX",
-            }
+    "@cssfile1": {
+        "path": "public/css/example.css",
+        "type": "text/css",
+        "integrity": "type:text/css sha256-XXXX sha512-XXXXXXXX",
+        "hashes": {
+            "sha256": "XXXX",
+            "sha512": "XXXXXXXX",
         }
     }
 }
@@ -121,8 +117,8 @@ $sri = function (id) {
 }
 
 $element = "<link
-    href='/style.css?cache={ sri("@public/style.css")["hashes"]["sha256"] }'
-    integrity='{ $sri("@public/style.css")["integrity"] }'
+    href='/style.css?cache={ sri("@cssfile1")["hashes"]["sha256"] }'
+    integrity='{ $sri("@cssfile1")["integrity"] }'
     rel='stylesheet'>";
 ```
 
@@ -135,8 +131,8 @@ var payload = require("./payload.json");
 var sri = (id) => payload.payload[id];
 
 var element = `<link
-    href='/style.css?cache=${ sri("@public/style.css").hashes.sha256 }'
-    integrity='${ sri("@public/style.css").integrity }'
+    href='/style.css?cache=${ sri("@cssfile1").hashes.sha256 }'
+    integrity='${ sri("@cssfile1").integrity }'
     rel='stylesheet'>`;
 ```
 
