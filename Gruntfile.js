@@ -44,6 +44,7 @@ module.exports = function (grunt) {
     */
 
     grunt.config("sri", {
+
         // Create a manifest with the default settings
         "default": {
             "src": [
@@ -74,7 +75,54 @@ module.exports = function (grunt) {
                     id: "txt1"
                 }
             ]
+        },
+
+        // Create a third manifest
+        "merged-1": {
+            "options": {
+                "algorithms": ["sha256"],
+                "dest": "./tmp/merged.json",
+                "targetProp": "merged",
+                "merge": true
+            },
+            "files": [
+                {
+                    src: "test/fixtures/example/example.js",
+                    id: "part1",
+                    type: "application/javascript"
+                }
+            ]
+        },
+        // Merge a separate result with the third manifest
+        "merged-2": {
+            "options": {
+                "algorithms": ["sha256"],
+                "dest": "./tmp/merged.json",
+                "targetProp": "merged",
+                "merge": true
+            },
+            "files": [
+                {
+                    src: "test/fixtures/example/example.js",
+                    id: "part2"
+                }
+            ]
+        },
+        // Merge a separate targetProp-free result with the third manifest
+        "merged-3": {
+            "options": {
+                "algorithms": ["sha512"],
+                "dest": "./tmp/merged.json",
+                "merge": true
+            },
+            "files": [
+                {
+                    src: "test/fixtures/example/example.js",
+                    id: "part3"
+                }
+            ]
         }
+
     });
 
     grunt.registerTask("prep", "Prepare for tests", function () {

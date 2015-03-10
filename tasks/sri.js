@@ -9,9 +9,11 @@ var fs = require("fs"),
     R = require("ramda"),
     sriToolbox = require("sri-toolbox"),
 
+    grunt,
+
     fileList,
     generate,
-    writeJson,
+    saveJson,
     writeLog,
     task;
 
@@ -61,26 +63,51 @@ generate = function (filePath, options, sriDataCallback) {
 
 
 /**
- * Save JSON file to disk
+ * Save object to to disk as JSON file
  */
-writeJson = function (filePath, object, callback) {
-    fs.writeFile(
-        filePath,
-        JSON.stringify(object),
-        callback
-    );
+saveJson = function (options, manifest, callback) {
+    var writeJson = function (err, oldData) {
+        var targetObj = {};
+
+        // Seed targetObj with oldData, if appropriate
+        if (err) {
+            callback(err, oldData);
+        } else if (!err && oldData) {
+            targetObj = JSON.parse(oldData);
+        }
+
+        // Assign manifest to targetObj.targetProp, if appropriate
+        if (options.targetProp) {
+            targetObj[options.targetProp] = targetObj[options.targetProp] || {};
+            targetObj[options.targetProp] = R.merge(targetObj[options.targetProp], manifest);
+        } else {
+            targetObj = R.merge(targetObj, manifest);
+        }
+
+        fs.writeFile(
+            options.dest,
+            JSON.stringify(targetObj),
+            callback
+        );
+    };
+
+    if (options.merge && grunt.file.exists(options.dest)) {
+        fs.readFile(options.dest, { encoding: "utf8" }, writeJson);
+    } else {
+        writeJson();
+    }
 };
 
 
 /**
  * Write status to STDOUT and end program
  *     * filesSrc & done should be pre-defined.
- *     * err should be supplied by writeJson.
+ *     * err should be supplied by saveJson.
  */
-writeLog = R.curry(function (grunt, fileCount, done, err) {
+writeLog = R.curry(function (fileCount, done, err) {
     if (err) {
         // Error writing JSON file
-        grunt.log.error("Error writing file: " + err);
+        grunt.log.error("Error saving JSON: " + err);
         return done(false);
     }
     // Success
@@ -95,14 +122,15 @@ writeLog = R.curry(function (grunt, fileCount, done, err) {
 /**
  * Main Grunt task
  */
-task = function (grunt) {
+task = function () {
     var done = this.async(),
         fileCount = this.filesSrc.length,
         options;
 
     options = this.options({
-        "algorithms": grunt.option("algorithms") || ["sha256", "sha512"],
         "dest": grunt.option("dest") || "./payload.json",
+        "merge": grunt.option("merge") || false,
+        "algorithms": grunt.option("algorithms") || ["sha256", "sha512"],
         "targetProp": grunt.option("targetProp") || null
     });
 
@@ -123,25 +151,16 @@ task = function (grunt) {
 
         // Process completed manifest and finish up
         function (err, manifest) {
-            var targetObj = {};
-
             if (err) {
                 // Error generating SRI hashes
                 grunt.log.error("Error loading resource: " + err);
                 return done(false);
             }
 
-            // Assign manifest to targetObj.targetProp, if appropriate
-            if (options.targetProp) {
-                targetObj[options.targetProp] = manifest;
-            } else {
-                targetObj = manifest;
-            }
-
-            writeJson(
-                options.dest,
-                targetObj,
-                writeLog(grunt, fileCount, done)
+            saveJson(
+                options,
+                manifest,
+                writeLog(fileCount, done)
             );
         }
 
@@ -152,7 +171,10 @@ task = function (grunt) {
 /**
  * Exports
  */
-module.exports = function (grunt) {
+module.exports = function (gruntInstance) {
+    // Make grunt globally accessable
+    grunt = gruntInstance;
+
     // Attach Grunt task
     grunt.registerMultiTask(
         "sri",

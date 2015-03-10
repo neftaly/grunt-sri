@@ -72,6 +72,8 @@ Run the command `grunt`. The manifest file will be created.
 ## Options
 * String **dest**: Target JSON file.  
   Default `"./payload.json"`
+* Boolean **merge**: Merge results with existing JSON file.  
+  Default `false` (overwrite)
 * Array **algorithms**: List of desired hash algorithms.  
   Default `["sha256", "sha512"]`
 * String **targetProp**: Target JS object property name.
