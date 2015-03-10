@@ -6,7 +6,7 @@
 
 var fs = require("fs"),
     async = require("async"),
-    curry = require("curry"),
+    R = require("ramda"),
     sriToolbox = require("sri-toolbox"),
 
     fileList,
@@ -16,41 +16,28 @@ var fs = require("fs"),
     task;
 
 
+/*jslint nomen:true*/
+R.dunder = R.__;
+/*jslint nomen:false*/
+
+
 /**
  * Build a file list.
- *    Required as Grunt is designed for many-to-one mapping,
+ *    Grunt is designed for many-to-one mapping,
  *    whereas we only ever want one-to-one mapping.
  */
-fileList = function (filesArray, filesObj) {
-    // Deal with "Files Array Format" Gruntfile
-    var fileProps = Object.keys(filesObj).reduce(function (list, key) {
-        var file = filesObj[key],
-            src;
-        if (file.src.length === 1) {
-            src = file.src[0];
-            if (list[src]) {
-                throw new Error("Duplicate resource: " + src + ".");
-            }
-            list[src] = {
-                "id": "@" + (file.id || src),
-                "src": src,
-                "type": file.type
-            };
-        }
-        return list;
-    }, {});
-
-    // Deal with "Compact Format" Gruntfile
-    return filesArray.map(function (src) {
-        if (fileProps[src]) {
-            return fileProps[src];
-        }
-        return {
-            "src": src,
-            "id": "@" + src
-        };
-    });
-};
+fileList = R.reduce(function (fileProps, fileProp) {
+    return R.concat(
+        fileProps,
+        // For each of the many, create one new entry
+        fileProp.src.map(function (src) {
+            return R.merge(fileProp, {
+                id: "@" + (fileProp.id || src),
+                src: src
+            });
+        })
+    );
+}, [], R.dunder);
 
 
 /**
@@ -90,7 +77,7 @@ writeJson = function (filePath, object, callback) {
  *     * filesSrc & done should be pre-defined.
  *     * err should be supplied by writeJson.
  */
-writeLog = curry(function (grunt, fileCount, done, err) {
+writeLog = R.curry(function (grunt, fileCount, done, err) {
     if (err) {
         // Error writing JSON file
         grunt.log.error("Error writing file: " + err);
@@ -121,7 +108,7 @@ task = function (grunt) {
 
     // Iterate through the file list
     async.reduce(
-        fileList(this.filesSrc, this.files),
+        fileList(this.files),
         {},
 
         // Build manifest using the "reduce to object" pattern
