@@ -78,6 +78,8 @@ Run the command `grunt`. The manifest file will be created.
   Default `["sha256", "sha512"]`
 * String **targetProp**: Target JS object property name.
   Default `null`
+* Boolean **pretty**: Stringify the JSON output in a pretty format.
+  Default `false`
 
 
 
