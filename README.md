@@ -7,16 +7,17 @@
 This tool generates a JSON manifest of file hashes & [sub-resource integrity](https://srihash.org/) data.
 
 
-
 ## Install
+
 ```shell
 npm install --save-dev grunt-sri
 ```
 
 
-
 ## Usage
+
 Add the following to your `Gruntfile.js`:
+
 ```js
 module.exports = function (grunt) {
     "use strict";
@@ -68,20 +69,20 @@ module.exports = function (grunt) {
 Run the command `grunt`. The manifest file will be created.
 
 
-
 ## Options
+
 * String **dest**: Target JSON file.  
   Default `"./payload.json"`
 * Boolean **merge**: Merge results with existing JSON file.  
   Default `false` (overwrite)
 * Array **algorithms**: List of desired hash algorithms.  
   Default `["sha256", "sha512"]`
-* String **targetProp**: Target JS object property name.
+* String **targetProp**: Target JS object property name.  
   Default `null`
 
 
-
 ## Manifest
+
 Metadata is stored in JSON format.
 
 * The default manifest dest is `./payload.json`.
@@ -91,6 +92,7 @@ Metadata is stored in JSON format.
   If no ID is specified, the path will be used.
 
 Example:
+
 ```json
 {
     "@cssfile1": {
@@ -99,18 +101,19 @@ Example:
         "integrity": "type:text/css sha256-XXXX sha512-XXXXXXXX",
         "hashes": {
             "sha256": "XXXX",
-            "sha512": "XXXXXXXX",
+            "sha512": "XXXXXXXX"
         }
     }
 }
 ```
 
-
 ### Implementation
+
 Data from the manifest can be loaded into markup.
 Use the `integrity` property for SRI integrity attributes, a hash from `hashes` as a URL parameter for client-side caching, etc.
 
 #### PHP
+
 ```php
 // In production, consider compiling JSON to PHP assoc arrays
 $payload = json_decode(file_get_contents("./payload.json"), true);
@@ -125,6 +128,7 @@ $element = "<link
 ```
 
 #### Javascript
+
 **Note:** Node apps should use [subresource](https://github.com/neftaly/npm-subresource) or [handlebars-helper-sri](https://github.com/neftaly/handlebars-helper-sri), which don't require a build step.
 
 ```js
@@ -139,8 +143,8 @@ var element = `<link
 ```
 
 
-
 ## SemVer
+
 This tool follows SemVer from v0.1.0, however it is important to note that the [SRI](https://w3c.github.io/webappsec/specs/subresourceintegrity/) spec is still in draft.
 
 Changes to the V1 SRI spec will be tracked with minor releases.
