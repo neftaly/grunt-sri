@@ -18,9 +18,7 @@ var fs = require("fs"),
     task;
 
 
-/*jslint nomen:true*/
 R.dunder = R.__;
-/*jslint nomen:false*/
 
 
 /**

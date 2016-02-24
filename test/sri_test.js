@@ -1,4 +1,4 @@
-/*jslint stupid:true */ // It's a test, so sync methods are fine
+/* jshint mocha: true */
 
 "use strict";
 
