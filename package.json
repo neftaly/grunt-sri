@@ -2,15 +2,16 @@
   "name": "grunt-sri",
   "version": "0.0.5",
   "description": "Client-side caching & SRI generation for Grunt",
-  "author": {
-    "name": "Neftaly Hernandez",
-    "email": "neftaly.hernandez@gmail.com"
-  },
+  "author": "Neftaly Hernandez <neftaly.hernandez@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/neftaly/grunt-sri.git"
+    "url": "git+https://github.com/neftaly/grunt-sri.git"
   },
+  "bugs": {
+    "url": "https://github.com/neftaly/grunt-sri/issues"
+  },
+  "homepage": "https://github.com/neftaly/grunt-sri#readme",
   "keywords": [
     "gruntplugin",
     "caching",
@@ -26,7 +27,7 @@
     "digest",
     "file"
   ],
-  "main": "main",
+  "main": "tasks/sri.js",
   "scripts": {
     "test": "grunt test"
   },
