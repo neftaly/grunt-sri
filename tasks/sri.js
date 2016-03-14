@@ -165,7 +165,7 @@ task = function () {
  * Exports
  */
 module.exports = function (gruntInstance) {
-    // Make grunt globally accessable
+    // Make grunt globally accessible
     grunt = gruntInstance;
 
     // Attach Grunt task
