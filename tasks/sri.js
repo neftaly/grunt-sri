@@ -48,14 +48,10 @@ fileList = R.reduce(function (fileProps, fileProp) {
 generate = function (filePath, options, sriDataCallback) {
     options = {
         full: true,
-        type: options.type,
         algorithms: options.algorithms
     };
     fs.readFile(filePath, function (err, data) {
         var output = sriToolbox.generate(options, data);
-        if (!output.type) {
-            output.type = null;
-        }
         output.path = filePath;
         sriDataCallback(err, output);
     });
@@ -141,7 +137,6 @@ task = function () {
 
         // Build manifest using the "reduce to object" pattern
         function (manifest, file, callback) {
-            options.type = file.type;
             generate(file.src, options, function (err, sriData) {
                 // Attach a property to the WIP manifest object
                 manifest[file.id] = sriData;
