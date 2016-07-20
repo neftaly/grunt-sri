@@ -80,7 +80,7 @@ saveJson = function (options, manifest, callback) {
 
         fs.writeFile(
             options.dest,
-            JSON.stringify(targetObj),
+            JSON.stringify(targetObj, null, options.pretty ? 2 : 0),
             callback
         );
     };
