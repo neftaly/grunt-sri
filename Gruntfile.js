@@ -10,21 +10,14 @@ module.exports = function (grunt) {
     */
 
     // Linting
-    grunt.config("jslint", {
-        all: {
-            src: [
-                "Gruntfile.js",
-                "tasks/*.js",
-                "<%= mochaTest.tests %>"
-            ],
-            directives: {
-                node: true,
-                todo: true,
-                predef: [
-                    "describe",
-                    "it"
-                ]
-            }
+    grunt.config("jshint", {
+        all: [
+            "Gruntfile.js",
+            "tasks/*.js",
+            "<%= mochaTest.tests %>"
+        ],
+        options: {
+            jshintrc: ".jshintrc"
         }
     });
 
@@ -34,9 +27,9 @@ module.exports = function (grunt) {
     });
 
     grunt.loadTasks("tasks"); // Load this project
-    grunt.loadNpmTasks("grunt-jslint");
+    grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-mocha-test");
-    grunt.registerTask("default", ["jslint", "test"]);
+    grunt.registerTask("default", ["test"]);
 
 
     /*
@@ -141,6 +134,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("test", [
+        "jshint",
         "prep",
         "sri",
         "mochaTest",
