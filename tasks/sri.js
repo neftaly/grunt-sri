@@ -136,6 +136,11 @@ task = function () {
         // Build manifest using the "reduce to object" pattern
         function (manifest, file, callback) {
             generate(file.src, options, function (err, sriData) {
+                // Make relative if a cwd is specified
+                if (file.orig && file.orig.cwd) {
+                    file.id = file.id.replace(file.orig.cwd, "");
+                    sriData.path = sriData.path.replace(file.orig.cwd, "");
+                }
                 // Attach a property to the WIP manifest object
                 manifest[file.id] = sriData;
                 callback(err, manifest);

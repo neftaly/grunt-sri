@@ -46,6 +46,19 @@ module.exports = function (grunt) {
             ]
         },
 
+        // Create a second manifest with relative paths
+        "cwd": {
+            "options": {
+                "dest": "./tmp/cwd.json"
+            },
+            "cwd": "test/fixtures/",
+            "src": [
+                "example/*",
+                "example.txt"
+            ],
+            "expand": true
+        },
+
         // Create a second manifest with custom settings
         "custom": {
             "options": {

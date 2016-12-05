@@ -30,6 +30,23 @@ describe("default: payload.json", function () {
 
 });
 
+describe("custom:cwd", function () {
+    var path = "./tmp/cwd.json";
+
+    it("File exists", function () {
+        var expect = true,
+            result = grunt.file.exists(path);
+        assert.equal(expect, result);
+    });
+
+    it("Valid data", function () {
+        var expect = require("./expect/cwd.json"),
+            result = readJson(path);
+        assert.deepEqual(expect, result);
+    });
+
+});
+
 
 describe("custom: sri-directives.json", function () {
     var path = "./tmp/sri-directives.json";
