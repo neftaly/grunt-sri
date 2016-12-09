@@ -147,6 +147,6 @@ var element = `<link
 
 ## SemVer
 
-This tool follows SemVer from v0.1.0, however it is important to note that the [SRI](https://w3c.github.io/webappsec/specs/subresourceintegrity/) spec is still in draft.
+This tool follows SemVer from v0.1.0, as [SRI is now a W3C recommendation](https://www.w3.org/TR/SRI/).
 
 Changes to the V1 SRI spec will be tracked with minor releases.
