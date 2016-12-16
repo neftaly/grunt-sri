@@ -32,10 +32,7 @@ module.exports = function (grunt) {
                 "src": [
                     "public/**/*.css"
                 ]
-            }
-
-            /*
-            ,
+            },
 
             // Create a second manifest with custom settings
             "janesCustomTask": {
@@ -55,8 +52,6 @@ module.exports = function (grunt) {
                     }
                 ]
             }
-
-            */
 
         }
 
@@ -129,7 +124,7 @@ $element = "<link
     rel='stylesheet'>";
 ```
 
-#### Javascript
+#### JavaScript
 
 **Note:** Node apps should use [subresource](https://github.com/neftaly/npm-subresource) or [handlebars-helper-sri](https://github.com/neftaly/handlebars-helper-sri), which don't require a build step.
 
