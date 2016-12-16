@@ -1,6 +1,6 @@
 {
   "name": "grunt-sri",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Client-side caching & SRI generation for Grunt",
   "author": "Neftaly Hernandez <neftaly.hernandez@gmail.com>",
   "license": "MIT",
