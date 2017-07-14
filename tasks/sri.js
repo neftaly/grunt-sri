@@ -144,7 +144,7 @@ task = function () {
                 // Attach a property to the WIP manifest object
                 manifest[file.id] = sriData;
 
-                grunt.config(['sri','data', file.id.substring(1)], sriData.integrity);
+                grunt.config(["sri", "data", file.id.substring(1)], sriData.integrity);
                 callback(err, manifest);
             });
         },
