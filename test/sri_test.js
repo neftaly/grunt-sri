@@ -4,44 +4,38 @@
 
 var assert = require("assert"),
     grunt = require("grunt"),
-    fs = require("fs"),
-
-    readJson = function (path) {
-        return JSON.parse(
-            fs.readFileSync(path, { encoding: "utf8" })
-        );
-    };
+    path = require("path");
 
 
 describe("default: payload.json", function () {
-    var path = "./payload.json";
+    var testFile = "./payload.json";
 
     it("File exists", function () {
         var expect = true,
-            result = grunt.file.exists(path);
+            result = grunt.file.exists(testFile);
         assert.equal(expect, result);
     });
 
     it("Valid data", function () {
-        var expect = require("./expect/default.json"),
-            result = readJson(path);
+        var expect = grunt.file.readJSON(path.join(__dirname, "./expect/default.json")),
+            result = grunt.file.readJSON(testFile);
         assert.deepEqual(expect, result);
     });
 
 });
 
 describe("custom:cwd", function () {
-    var path = "./tmp/cwd.json";
+    var testFile = "./tmp/cwd.json";
 
     it("File exists", function () {
         var expect = true,
-            result = grunt.file.exists(path);
+            result = grunt.file.exists(testFile);
         assert.equal(expect, result);
     });
 
     it("Valid data", function () {
-        var expect = require("./expect/cwd.json"),
-            result = readJson(path);
+        var expect = grunt.file.readJSON(path.join(__dirname, "./expect/cwd.json")),
+            result = grunt.file.readJSON(testFile);
         assert.deepEqual(expect, result);
     });
 
@@ -49,17 +43,17 @@ describe("custom:cwd", function () {
 
 
 describe("custom: sri-directives.json", function () {
-    var path = "./tmp/sri-directives.json";
+    var testFile = "./tmp/sri-directives.json";
 
     it("File exists", function () {
         var expect = true,
-            result = grunt.file.exists(path);
+            result = grunt.file.exists(testFile);
         assert.equal(expect, result);
     });
 
     it("Valid data", function () {
-        var expect = require("./expect/custom.json"),
-            result = readJson(path);
+        var expect = grunt.file.readJSON(path.join(__dirname, "./expect/custom.json")),
+            result = grunt.file.readJSON(testFile);
         assert.deepEqual(expect, result);
     });
 
@@ -67,17 +61,17 @@ describe("custom: sri-directives.json", function () {
 
 
 describe("custom merged: merged.json", function () {
-    var path = "./tmp/merged.json";
+    var testFile = "./tmp/merged.json";
 
     it("File exists", function () {
         var expect = true,
-            result = grunt.file.exists(path);
+            result = grunt.file.exists(testFile);
         assert.equal(expect, result);
     });
 
     it("Valid data", function () {
-        var expect = require("./expect/merged.json"),
-            result = readJson(path);
+        var expect = grunt.file.readJSON(path.join(__dirname, "./expect/merged.json")),
+            result = grunt.file.readJSON(testFile);
         assert.deepEqual(expect, result);
     });
 
