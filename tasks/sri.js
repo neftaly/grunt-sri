@@ -18,7 +18,7 @@ var fs = require("fs"),
     task;
 
 
-R.dunder = R.__;
+R.dunder = R.__; // eslint-disable-line no-underscore-dangle
 
 
 /**
@@ -44,7 +44,7 @@ fileList = R.reduce(function (fileProps, fileProp) {
  * Load file and generate hash from it
  */
 generate = function (filePath, options, sriDataCallback) {
-    options = {
+    options = { // eslint-disable-line no-param-reassign
         full: true,
         algorithms: options.algorithms
     };
@@ -65,7 +65,7 @@ saveJson = function (options, manifest, callback) {
 
         // Seed targetObj with oldData, if appropriate
         if (err) {
-            callback(err, oldData);
+            return callback(err, oldData);
         } else if (!err && oldData) {
             targetObj = JSON.parse(oldData);
         }
@@ -78,7 +78,7 @@ saveJson = function (options, manifest, callback) {
             targetObj = R.merge(targetObj, manifest);
         }
 
-        fs.writeFile(
+        return fs.writeFile(
             options.dest,
             JSON.stringify(targetObj, null, options.pretty ? 2 : 0),
             callback
@@ -155,7 +155,7 @@ task = function () {
                 return done(false);
             }
 
-            saveJson(
+            return saveJson(
                 options,
                 manifest,
                 writeLog(fileCount, done)

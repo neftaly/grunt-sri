@@ -1,4 +1,4 @@
-/* jshint mocha: true */
+/* eslint-env mocha */
 
 "use strict";
 
