@@ -3,17 +3,17 @@ sudo: false
 language: node_js
 
 node_js:
-  - "0.10"
-  - "4"
-  - "6"
-  - "7"
+    - "0.10"
+    - "4"
+    - "6"
+    - "8"
 
 notifications:
-  email: false
+    email: false
 
 matrix:
-  fast_finish: true
+    fast_finish: true
 
 cache:
-  directories:
-    - node_modules
+    directories:
+        - node_modules
